@@ -8,12 +8,18 @@ import 'package:barber_select/utils/responsive.dart';
 import 'package:barber_select/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:barber_select/screens/auth/controller/auth_controller.dart';
+import 'package:barber_select/screens/auth/screens/login_screen.dart';
+import 'package:barber_select/screens/barber/home/screens/barber_home_screen.dart';
 
 import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   String savedLanguage = await Prefs().loadSavedLanguage();
+  // 🔐 AuthController bereitstellen & gespeicherten User laden
+  final auth = Get.put(AuthController());
+  await auth.load();
   Get.put(ClientBookingController());
   runApp(MyApp(savedLanguage: savedLanguage));
 }
@@ -45,13 +51,13 @@ class _MyAppState extends State<MyApp> {
         Responsive.isMobile(context)
             ? 375
             : Responsive.isTablet(context)
-            ? 1024
-            : 1440,
+                ? 1024
+                : 1440,
         Responsive.isMobile(context)
             ? 852
             : Responsive.isTablet(context)
-            ? 1024
-            : 1024,
+                ? 1024
+                : 1024,
       ),
       minTextAdapt: true,
       builder: (_, child) {
@@ -64,14 +70,19 @@ class _MyAppState extends State<MyApp> {
             child: GetMaterialApp(
               debugShowCheckedModeBanner: false,
               translations: Translation(),
-              themeMode:
-                  drawerController.isDarkMode.value
-                      ? ThemeMode.dark
-                      : ThemeMode.light,
+              themeMode: drawerController.isDarkMode.value
+                  ? ThemeMode.dark
+                  : ThemeMode.light,
               locale: defaultLocale,
               title: 'thmCUT',
               theme: AppThemes().lightTheme,
               darkTheme: AppThemes().darkTheme,
+
+              getPages: [
+                GetPage(name: '/login', page: () => LoginScreen()),
+                GetPage(
+                    name: '/barber/dashboard', page: () => BarberHomeScreen()),
+              ],
               // theme: ThemeData(
               //   colorScheme: ColorScheme.fromSeed(
               //     seedColor: AppColors.primaryColor,

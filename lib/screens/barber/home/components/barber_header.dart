@@ -23,7 +23,7 @@ class BarberHeader extends StatelessWidget {
             40.ph,
             Obx(
               () => Text(
-                'Hello, Robert Davis',
+                'Hallo, ${controller.userName.value}', // ← Hier ist die Änderung
                 style: AppTextStyles.getPoppins(
                   16.sp,
                   5.weight,
@@ -33,7 +33,7 @@ class BarberHeader extends StatelessWidget {
             ),
             Obx(
               () => Text(
-                'You are in your schedule'.tr,
+                'Sie sind in Ihrem Zeitplan'.tr,
                 style: AppTextStyles.getPoppins(
                   12.sp,
                   4.weight,
@@ -50,10 +50,9 @@ class BarberHeader extends StatelessWidget {
             height: 40.h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
-              color:
-                  themeController.isDarkMode.value
-                      ? AppColors.blackColor
-                      : AppColors.iconContainerColor,
+              color: themeController.isDarkMode.value
+                  ? AppColors.blackColor
+                  : AppColors.iconContainerColor,
             ),
             child: Center(
               child: Obx(
@@ -66,10 +65,9 @@ class BarberHeader extends StatelessWidget {
                     controller.showBalance.value
                         ? Icons.visibility
                         : Icons.visibility_off_outlined,
-                    color:
-                        controller.showBalance.value
-                            ? AppColors.primaryColor
-                            : themeController.isDarkMode.value
+                    color: controller.showBalance.value
+                        ? AppColors.primaryColor
+                        : themeController.isDarkMode.value
                             ? AppColors.darkModeTextColor
                             : AppColors.blackColor,
                   ),
@@ -89,18 +87,16 @@ class BarberHeader extends StatelessWidget {
               height: 40.h,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),
-                color:
-                    themeController.isDarkMode.value
-                        ? AppColors.blackColor
-                        : AppColors.iconContainerColor,
+                color: themeController.isDarkMode.value
+                    ? AppColors.blackColor
+                    : AppColors.iconContainerColor,
               ),
               child: Center(
                 child: Icon(
                   Icons.menu_open_rounded,
-                  color:
-                      themeController.isDarkMode.value
-                          ? AppColors.darkModeTextColor
-                          : AppColors.blackColor,
+                  color: themeController.isDarkMode.value
+                      ? AppColors.darkModeTextColor
+                      : AppColors.blackColor,
                 ),
               ),
             ),

@@ -43,7 +43,7 @@ class AddNewClient extends StatelessWidget {
                 30.ph,
                 SlideInRight(
                   child: Text(
-                    "Add a".tr,
+                    "Hinzufügen einer".tr,
                     style: AppTextStyles.getPoppins(
                       14.sp,
                       4.weight,
@@ -53,7 +53,7 @@ class AddNewClient extends StatelessWidget {
                 ),
                 SlideInRight(
                   child: Text(
-                    "New Client".tr,
+                    "Neuer Kunde".tr,
                     style: AppTextStyles.getPoppins(
                       24.sp,
                       5.weight,
@@ -84,7 +84,7 @@ class AddNewClient extends StatelessWidget {
                       controller: controller.tecPhone,
                       borderColor: AppColors.whiteColor,
                       borderRadius: 8,
-                      hintText: 'Phone Number'.tr,
+                      hintText: 'Telefonnummer'.tr,
                       contentPadding: EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 12,

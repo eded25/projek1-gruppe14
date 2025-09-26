@@ -90,7 +90,7 @@ class CancelAppointment extends StatelessWidget {
                               children: [
                                 Center(
                                   child: Text(
-                                    "Cancellation".tr,
+                                    "Abbruch".tr,
                                     style: AppTextStyles.getPoppins(
                                       22.sp,
                                       6.weight,
@@ -107,7 +107,7 @@ class CancelAppointment extends StatelessWidget {
                                 ),
                                 Center(
                                   child: Text(
-                                    "You are about to cancel this appointment"
+                                    "Sie sind dabei, diesen Termin zu stornieren"
                                         .tr,
                                     style: AppTextStyles.getPoppins(
                                       14.sp,
@@ -139,7 +139,7 @@ class CancelAppointment extends StatelessWidget {
                                 10.ph,
                                 Center(
                                   child: Text(
-                                      'Booking Cancelled'.tr,
+                                      'Buchung storniert'.tr,
                                       style: AppTextStyles.getPoppins(
                                         18.sp,
                                         6.weight,

@@ -1,4 +1,4 @@
-import 'package:barber_select/screens/auth/screens/choose_profile.dart';
+import 'package:barber_select/screens/auth/screens/login_screen.dart'; // ← Geändert
 import 'package:barber_select/utils/app_colors.dart';
 import 'package:barber_select/utils/app_text_styles.dart';
 import 'package:barber_select/utils/gaps.dart';
@@ -15,24 +15,23 @@ class EnterVerificationCode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<CustomDrawerController>();
-    
+
     final defaultPinTheme = PinTheme(
       width: 56.w,
       height: 56.h,
-
       textStyle: AppTextStyles.getPoppins(
         24.sp,
         6.weight,
         themeController.isDarkMode,
-            themeController.isDarkMode.value  ? AppColors.whiteColor.withOpacity(0.6)
+        themeController.isDarkMode.value
+            ? AppColors.whiteColor.withOpacity(0.6)
             : AppColors.blackColor.withOpacity(0.6),
       ),
       decoration: BoxDecoration(
         border: Border.all(
-          color:
-              Get.isDarkMode
-                  ? AppColors.darkPrimaryColor.withOpacity(0.4)
-                  : AppColors.primaryColor.withOpacity(0.4),
+          color: Get.isDarkMode
+              ? AppColors.darkPrimaryColor.withOpacity(0.4)
+              : AppColors.primaryColor.withOpacity(0.4),
           width: 2,
         ),
         borderRadius: BorderRadius.circular(6),
@@ -41,10 +40,9 @@ class EnterVerificationCode extends StatelessWidget {
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
       border: Border.all(
-        color:
-            Get.isDarkMode
-                ? AppColors.darkPrimaryColor.withOpacity(0.5)
-                : AppColors.primaryColor,
+        color: Get.isDarkMode
+            ? AppColors.darkPrimaryColor.withOpacity(0.5)
+            : AppColors.primaryColor,
         width: 2,
       ),
       borderRadius: BorderRadius.circular(6),
@@ -53,10 +51,9 @@ class EnterVerificationCode extends StatelessWidget {
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration!.copyWith(
         border: Border.all(
-          color:
-              Get.isDarkMode
-                  ? AppColors.darkPrimaryColor.withOpacity(0.5)
-                  : AppColors.primaryColor,
+          color: Get.isDarkMode
+              ? AppColors.darkPrimaryColor.withOpacity(0.5)
+              : AppColors.primaryColor,
           width: 2,
         ),
         color: Get.isDarkMode ? AppColors.darkScreenBg : AppColors.whiteColor,
@@ -72,18 +69,23 @@ class EnterVerificationCode extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               60.ph,
-            Obx(()=>  Text(
-                'Enter verification code'.tr,
-                style: AppTextStyles.getPoppins(20.sp, 7.weight,themeController.isDarkMode),
-          ),),
+              Obx(
+                () => Text(
+                  'Verifizierungscode eingeben'.tr,
+                  style: AppTextStyles.getPoppins(
+                      20.sp, 7.weight, themeController.isDarkMode),
+                ),
+              ),
               20.ph,
               Text(
-                "We have send you a 4 digit verification code on".tr,
-                style: AppTextStyles.getPoppins(15.sp, 4.weight, themeController.isDarkMode),
+                "Wir haben Ihnen einen 4-stelligen Verifizierungscode auf".tr,
+                style: AppTextStyles.getPoppins(
+                    15.sp, 4.weight, themeController.isDarkMode),
               ),
               Text(
                 "+6141 234 5***",
-                style: AppTextStyles.getPoppins(15.sp, 4.weight, themeController.isDarkMode),
+                style: AppTextStyles.getPoppins(
+                    15.sp, 4.weight, themeController.isDarkMode),
               ),
               20.ph,
               Pinput(
@@ -92,16 +94,19 @@ class EnterVerificationCode extends StatelessWidget {
                 obscureText: true,
                 focusedPinTheme: focusedPinTheme,
                 submittedPinTheme: submittedPinTheme,
-
                 pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                 showCursor: true,
                 onCompleted: (pin) => print(pin),
               ),
               30.ph,
               CustomButtonWidget(
-                btnLabel: 'Confirm',
+                btnLabel: 'Bestätigen',
                 onTap: () {
-                  Get.to(() => ChooseProfile());
+                  // Zurück zum Login oder direkt weiterleiten
+                  Get.offAll(() => LoginScreen()); // ← Geändert
+
+                  // Oder falls Sie eine andere Logik brauchen:
+                  // Get.snackbar('Verifizierung', 'Code wurde bestätigt');
                 },
               ),
               20.ph,
@@ -110,15 +115,15 @@ class EnterVerificationCode extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.replay_outlined,
-                    color:
-                        Get.isDarkMode
-                            ? AppColors.whiteColor
-                            : AppColors.blackColor,
+                    color: Get.isDarkMode
+                        ? AppColors.whiteColor
+                        : AppColors.blackColor,
                   ),
                   10.pw,
                   Text(
-                    'Re-send code'.tr,
-                    style: AppTextStyles.getPoppins(14.sp, 7.weight, themeController.isDarkMode),
+                    'Code erneut senden'.tr,
+                    style: AppTextStyles.getPoppins(
+                        14.sp, 7.weight, themeController.isDarkMode),
                   ),
                 ],
               ),

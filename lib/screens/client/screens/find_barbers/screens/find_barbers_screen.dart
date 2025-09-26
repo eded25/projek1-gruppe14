@@ -62,7 +62,6 @@ class FindBarbersScreen extends StatelessWidget {
                         ),
                       ),
                       10.ph,
-
                       SlideInRight(
                         duration: const Duration(milliseconds: 700),
                         child: CustomTextFormField(
@@ -71,38 +70,142 @@ class FindBarbersScreen extends StatelessWidget {
                           controller: controller.tecSearch,
                           borderRadius: 12,
                           hintText: 'Search here...'.tr,
-                          borderColor:
-                              Get.isDarkMode
-                                  ? AppColors.primaryColor
-                                  : AppColors.whiteColor,
+                          borderColor: Get.isDarkMode
+                              ? AppColors.primaryColor
+                              : AppColors.whiteColor,
                           suffix: Icon(Icons.search, size: 20),
                         ),
                       ),
                       20.ph,
+                      Obx(() {
+                        if (controller.isLoadingBarbers.value) {
+                          return SlideInUp(
+                            duration: const Duration(milliseconds: 600),
+                            child: Container(
+                              height: 200,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircularProgressIndicator(
+                                      color: AppColors.primaryColor,
+                                    ),
+                                    10.ph,
+                                    Text(
+                                      'Loading barbers...'.tr,
+                                      style: TextStyle(
+                                        color: Get.isDarkMode
+                                            ? AppColors.whiteColor
+                                            : AppColors.textBlackColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }
 
-                      SlideInUp(
-                        duration: const Duration(milliseconds: 600),
-                        child: ListView.builder(
+                        if (controller.barbers.isEmpty) {
+                          return SlideInUp(
+                            duration: const Duration(milliseconds: 600),
+                            child: Container(
+                              height: 200,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.error_outline,
+                                      size: 48,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                    10.ph,
+                                    Text(
+                                      'No barbers found'.tr,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Get.isDarkMode
+                                            ? AppColors.whiteColor
+                                            : AppColors.textBlackColor,
+                                      ),
+                                    ),
+                                    5.ph,
+                                    Text(
+                                      'Please try again later'.tr,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Get.isDarkMode
+                                            ? AppColors.whiteColor
+                                                .withOpacity(0.7)
+                                            : AppColors.textBlackColor
+                                                .withOpacity(0.7),
+                                      ),
+                                    ),
+                                    15.ph,
+                                    ElevatedButton(
+                                      onPressed: () =>
+                                          controller.loadBarbersFromDatabase(),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primaryColor,
+                                        foregroundColor: AppColors.whiteColor,
+                                      ),
+                                      child: Text('Retry'.tr),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+
+                        return SlideInUp(
+                          duration: const Duration(milliseconds: 600),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // 🔥 NEU: Debug Info (kann später entfernt werden)
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  '✅ ${controller.barbers.length} Barber(s) loaded',
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              10.ph,
+
+                              ListView.builder(
                                 physics: BouncingScrollPhysics(),
-
-                          itemCount: controller.barbers.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            final barber = controller.barbers[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 7.0,
-                              ),
-                              child: InkWell(
-                                onTap: () {
-                                  Get.to(() => BarberDetailsScreen(barber: barber,));
+                                itemCount: controller.barbers.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  final barber = controller.barbers[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 7.0,
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        Get.to(() => BarberDetailsScreen(
+                                            barber: barber));
+                                      },
+                                      child: FindBarbersTile(barbers: barber),
+                                    ),
+                                  );
                                 },
-                                child: FindBarbersTile(barbers: barber),
                               ),
-                            );
-                          },
-                        ),
-                      ),
+                            ],
+                          ),
+                        );
+                      }),
                     ],
                   ),
                 ),

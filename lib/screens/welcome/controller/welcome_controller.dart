@@ -7,32 +7,29 @@ class WelcomeController extends GetxController {
 
   List<Map<String, String>> pages = [
     {
-      "title": "Your Barber, Your Way",
+      "title": "Dein Look. Dein Friseur.",
       "description":
-          "Effortless booking, exceptional cuts, Cut Quest is your go-to destination for a seamless barber expeirence. Find, book and enjoy the perfect cut, all in one place.",
+          "Einfach buchen. Stylisch aussehen. Ihre Adresse für ein reibungsloses Friseurerlebnis  von der schnellen Terminfindung bis zum perfekten Haarschnitt. Finden, buchen und genießen  alles an einem Ort.",
       "background": Assets.barberImage1,
     },
     {
-      "title": "Your Barber, Your Way",
+      "title": "Dein Look. Dein Friseur.",
       "description":
-          "Effortless booking, exceptional cuts, Cut Quest is your go-to destination for a seamless barber expeirence. Find, book and enjoy the perfect cut, all in one place.",
+          "Einfach buchen. Stylisch aussehen. Ihre Adresse für ein reibungsloses Friseurerlebnis  von der schnellen Terminfindung bis zum perfekten Haarschnitt. Finden, buchen und genießen alles an einem Ort.",
       "background": Assets.barberImage2,
     },
     {
-      "title": "Your Barber, Your Way",
+      "title": "Dein Look. Dein Friseur.",
       "description":
-          "Effortless booking, exceptional cuts, Cut Quest is your go-to destination for a seamless barber expeirence. Find, book and enjoy the perfect cut, all in one place.",
+          "Einfach buchen. Stylisch aussehen. Ihre Adresse für ein reibungsloses Friseurerlebnis  von der schnellen Terminfindung bis zum perfekten Haarschnitt. Finden, buchen und genießen  alles an einem Ort.",
       "background": Assets.barberImage3,
     },
   ];
 
-  void skip() {
-    // Get.to(() => CreateAccount());
-  }
+  void skip() {}
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     for (var page in pages) {
       precacheImage(AssetImage(page["background"]!), Get.context!);

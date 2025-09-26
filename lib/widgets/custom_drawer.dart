@@ -1,5 +1,6 @@
 import 'package:barber_select/dialog/logout_dialog.dart';
 import 'package:barber_select/generated/assets.dart';
+import 'package:barber_select/screens/auth/controller/auth_controller.dart';
 import 'package:barber_select/screens/auth/screens/login_screen.dart';
 import 'package:barber_select/screens/barber/home/screens/barber_home_screen.dart';
 import 'package:barber_select/screens/barber/my_clients/screens/my_clients_screen.dart';
@@ -34,10 +35,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
   Widget build(BuildContext context) {
     final controller = Get.find<CustomDrawerController>();
     return Drawer(
-      backgroundColor:
-          Get.isDarkMode
-              ? AppColors.darkScreenBg.withOpacity(0.9)
-              : AppColors.whiteColor.withOpacity(0.9),
+      backgroundColor: Get.isDarkMode
+          ? AppColors.darkScreenBg.withOpacity(0.9)
+          : AppColors.whiteColor.withOpacity(0.9),
       child: Column(
         children: [
           70.ph,
@@ -47,13 +47,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
               Image.asset(
                 Assets.appLogo,
                 width: 100.w,
-                color:
-                    Get.isDarkMode
-                        ? AppColors.whiteColor
-                        : AppColors.blackColor,
+                color: Get.isDarkMode
+                    ? AppColors.whiteColor
+                    : AppColors.blackColor,
               ),
               Spacer(),
-
               InkWell(
                 onTap: () {
                   Get.back();
@@ -62,10 +60,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   width: 40.w,
                   height: 40.h,
                   decoration: BoxDecoration(
-                    color:
-                        Get.isDarkMode
-                            ? AppColors.blackColor
-                            : AppColors.iconContainerColor,
+                    color: Get.isDarkMode
+                        ? AppColors.blackColor
+                        : AppColors.iconContainerColor,
                     borderRadius: BorderRadius.circular(6),
                     boxShadow: [
                       BoxShadow(
@@ -155,66 +152,84 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     Get.to(() => BarberSettingsScreen());
                   },
                 ),
-              if (!widget.isBarber)
-                DrawerTile(
-                  icon: Icons.logout,
-                  title: 'Logout',
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return LogoutDialog();
-                      },
-                    );
-                  },
-                ),
+              if (widget.isBarber) 15.ph,
+
+              // logout
+              DrawerTile(
+                icon: Icons.logout,
+                title: 'Logout',
+                onTap: () async {
+                  // Direkte Logout-Funktionalität ohne Dialog
+                  final authController = Get.find<AuthController>();
+                  await authController.logout();
+
+                  Get.offAll(() => LoginScreen());
+                  Get.snackbar(
+                    'Abgemeldet',
+                    'Sie wurden erfolgreich abgemeldet',
+                    backgroundColor: Colors.orange,
+                    colorText: Colors.white,
+                  );
+                },
+              ),
+
+              // DrawerTile(
+              //   icon: Icons.logout,
+              //   title: 'Logout',
+              //   onTap: () {
+              //     showDialog(
+              //       context: context,
+              //       builder: (context) {
+              //         return LogoutDialog();
+              //       },
+              //     );
+              //   },
+              // ),
+
               50.ph,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
 
-                children: [
-                  Flexible(
-                    child: SizedBox(
-                      width:
-                          Responsive.isLargeDesktop(context)
-                              ? 200
-                              : Responsive.isDesktop(context)
-                              ? 150
-                              : Responsive.isTablet(context)
-                              ? 150
-                              : null,
-                      child: CustomButtonWidget(
-                        btnLabel: 'BARBER'.tr,
-                        bgColor: AppColors.darkBrownColor,
-                        onTap: () {
-                          Get.offAll(() => BarberHomeScreen());
-                        },
-                      ),
-                    ),
-                  ),
-                  10.pw,
-
-                  Flexible(
-                    child: SizedBox(
-                      width:
-                          Responsive.isLargeDesktop(context)
-                              ? 200
-                              : Responsive.isDesktop(context)
-                              ? 150
-                              : Responsive.isTablet(context)
-                              ? 150
-                              : null,
-                      child: CustomButtonWidget(
-                        btnLabel: 'CLIENT'.tr,
-                        bgColor: AppColors.primaryColor2,
-                        onTap: () {
-                          Get.offAll(() => ClientHomeScreen());
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ).paddingOnly(right: 20),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   children: [
+              //     Flexible(
+              //       child: SizedBox(
+              //         width: Responsive.isLargeDesktop(context)
+              //             ? 200
+              //             : Responsive.isDesktop(context)
+              //             ? 150
+              //             : Responsive.isTablet(context)
+              //             ? 150
+              //             : null,
+              //         child: CustomButtonWidget(
+              //           btnLabel: 'BARBER'.tr,
+              //           bgColor: AppColors.darkBrownColor,
+              //           onTap: () {
+              //             Get.offAll(() => BarberHomeScreen());
+              //           },
+              //         ),
+              //       ),
+              //     ),
+              //     10.pw,
+              //     Flexible(
+              //       child: SizedBox(
+              //         width: Responsive.isLargeDesktop(context)
+              //             ? 200
+              //             : Responsive.isDesktop(context)
+              //             ? 150
+              //             : Responsive.isTablet(context)
+              //             ? 150
+              //             : null,
+              //         child: CustomButtonWidget(
+              //           btnLabel: 'CLIENT'.tr,
+              //           bgColor: AppColors.primaryColor2,
+              //           onTap: () {
+              //             Get.offAll(() => ClientHomeScreen());
+              //           },
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ).paddingOnly(right: 20),
             ],
           ).paddingSymmetric(horizontal: 20),
           Spacer(),
@@ -232,10 +247,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     ),
                   ],
                   borderRadius: BorderRadius.circular(6),
-                  color:
-                      Get.isDarkMode
-                          ? AppColors.blackColor.withOpacity(0.7)
-                          : AppColors.iconContainerColor,
+                  color: Get.isDarkMode
+                      ? AppColors.blackColor.withOpacity(0.7)
+                      : AppColors.iconContainerColor,
                 ),
                 child: Center(
                   child: InkWell(
@@ -249,48 +263,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             ? Icons.sunny
                             : Icons.dark_mode_outlined,
                         size: 30,
-                        color:
-                            controller.isDarkMode.value
-                                ? AppColors.whiteColor
-                                : AppColors.blackColor,
+                        color: controller.isDarkMode.value
+                            ? AppColors.whiteColor
+                            : AppColors.blackColor,
                       ),
                     ),
                   ),
                 ),
               ),
               5.pw,
-              // InkWell(
-              //   onTap: () {
-              //     controller.selectLanguage('English');
-              //   },
-              //   child: Image.asset(
-              //     Assets.usaFlag,
-              //     width: 50.w,
-              //     fit: BoxFit.cover,
-              //   ),
-              // ),
-              // 10.pw,
-              // InkWell(
-              //   onTap: () {
-              //     controller.selectLanguage('Spanish');
-              //   },
-              //   child: Image.asset(
-              //     Assets.spainFlag,
-              //     width: 37.w,
-              //     fit: BoxFit.cover,
-              //   ),
-              // ),
-              // 15.pw,
-              // InkWell(
-              //   onTap: () {
-              //     controller.selectLanguage('Brazil');
-              //   },
-              //   child: Image.asset(
-              //     Assets.brazilFlag,
-              //     width: 37.w,
-              //     fit: BoxFit.cover,
-              //   ),
-              // ),
             ],
           ).paddingSymmetric(horizontal: 20),
           20.ph,
@@ -322,10 +303,9 @@ class DrawerTile extends StatelessWidget {
             width: 30,
             child: Icon(
               icon,
-              color:
-                  Get.isDarkMode
-                      ? AppColors.darkModeTextColor
-                      : AppColors.textBlackColor,
+              color: Get.isDarkMode
+                  ? AppColors.darkModeTextColor
+                  : AppColors.textBlackColor,
             ),
           ),
           5.pw,
@@ -336,7 +316,6 @@ class DrawerTile extends StatelessWidget {
                 16.sp,
                 5.weight,
                 themeController.isDarkMode,
-
                 themeController.isDarkMode.value
                     ? AppColors.darkModeTextColor
                     : AppColors.textBlackColor,

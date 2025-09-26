@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:barber_select/services/api_service.dart';
+import 'package:barber_select/screens/auth/controller/auth_controller.dart';
 
 class RegistrationTab extends StatelessWidget {
   const RegistrationTab({super.key, required this.user});
@@ -43,7 +45,6 @@ class RegistrationTab extends StatelessWidget {
             onTap: () => controller.pickAppointmentDate(context),
           ),
           15.ph,
-
           Wrap(
             spacing: 20,
             runSpacing: 15,
@@ -93,79 +94,93 @@ class RegistrationTab extends StatelessWidget {
           ),
           10.ph,
           Obx(() => Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    controller.selectedPaymentMethod.value = 'Cash';
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: controller.selectedPaymentMethod.value == 'Cash'
-                          ? AppColors.primaryColor
-                          : Get.isDarkMode
-                          ? AppColors.darkScreenBg
-                          : AppColors.greyColor.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Cash'.tr,
-                      style: AppTextStyles.getPoppins(
-                        13.sp,
-                        5.weight,
-                        (controller.selectedPaymentMethod.value == 'Cash').obs,
-                        AppColors.textBlackColor,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        controller.selectedPaymentMethod.value = 'Cash';
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color:
+                              controller.selectedPaymentMethod.value == 'Cash'
+                                  ? AppColors.primaryColor
+                                  : Get.isDarkMode
+                                      ? AppColors.darkScreenBg
+                                      : AppColors.greyColor.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Cash'.tr,
+                          style: AppTextStyles.getPoppins(
+                            13.sp,
+                            5.weight,
+                            (controller.selectedPaymentMethod.value == 'Cash')
+                                .obs,
+                            AppColors.textBlackColor,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              15.pw,
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    controller.selectedPaymentMethod.value = 'Card';
-                    _showCardPaymentSheet(context); // show bottom sheet immediately
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: controller.selectedPaymentMethod.value == 'Card'
-                          ? AppColors.primaryColor
-                          : Get.isDarkMode
-                          ? AppColors.darkScreenBg
-                          : AppColors.greyColor.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Card'.tr,
-                      style: AppTextStyles.getPoppins(
-                        13.sp,
-                        5.weight,
-                        (controller.selectedPaymentMethod.value == 'Card').obs,
-                        AppColors.textBlackColor,
+                  15.pw,
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        controller.selectedPaymentMethod.value = 'Card';
+                        _showCardPaymentSheet(
+                            context); // show bottom sheet immediately
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color:
+                              controller.selectedPaymentMethod.value == 'Card'
+                                  ? AppColors.primaryColor
+                                  : Get.isDarkMode
+                                      ? AppColors.darkScreenBg
+                                      : AppColors.greyColor.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Card'.tr,
+                          style: AppTextStyles.getPoppins(
+                            13.sp,
+                            5.weight,
+                            (controller.selectedPaymentMethod.value == 'Card')
+                                .obs,
+                            AppColors.textBlackColor,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ],
-          )),
+                ],
+              )),
           30.ph,
-
           Center(
             child: SizedBox(
               width: 200.w,
               child: CustomButtonWidget(
                 btnLabel: 'FINISH'.tr,
                 onTap: () async {
-
                   final findController = Get.find<FindBarberController>();
                   final bookingController = Get.find<ClientBookingController>();
 
+                  // 0) Auswahl prüfen
+                  if (findController.selectedTimes.isEmpty) {
+                    Get.snackbar('Hinweis', 'Bitte Uhrzeit wählen');
+                    return;
+                  }
+                  if (controller.tecDate.text.isEmpty) {
+                    Get.snackbar('Hinweis', 'Bitte Datum wählen');
+                    return;
+                  }
+
+                  // 1) ausgewählte Services + Preis
                   final selectedServices = <String>[];
                   double totalPrice = 0;
 
@@ -186,135 +201,124 @@ class RegistrationTab extends StatelessWidget {
                     totalPrice += 30;
                   }
 
-                  final booking = BookingRequest(
-                    requestId: DateTime.now().millisecondsSinceEpoch.toString(),
-                    barberName: user.name,
-                    selectedTimes: findController.selectedTimes,
-                    services: selectedServices,
-                    barberRating: user.rating, // Replace with actual rating
-                    price: totalPrice,
-                    date: controller.tecDate.text,
-                  );
-
                   if (selectedServices.isEmpty) {
-                    return;
-                  }
-                  if (findController.selectedTimes.isEmpty) {
-                    return;
-                  }
-                  if (findController.tecDate.text.isEmpty) {
+                    Get.snackbar('Hinweis',
+                        'Bitte mindestens eine Dienstleistung auswählen');
                     return;
                   }
 
-                  await bookingController.saveBooking(booking).then((_) {
-                    if(controller.selectedPaymentMethod.value == 'Card')
-                    Get.snackbar(
-                      'Payment Success'.tr,
-                      'Your payment has been processed.'.tr,
-                      snackPosition: SnackPosition.BOTTOM,
-                      backgroundColor: AppColors.primaryColor.withOpacity(0.2),
-                      colorText: AppColors.blackColor,
+                  // 2) Date + Time -> MySQL-Format
+                  final dateStr = controller.tecDate.text; // z.B. '25/09/2025'
+                  final timeStr =
+                      findController.selectedTimes.first; // z.B. '11:00'
+                  final dt = _combineDateTime(dateStr, timeStr);
+                  final mysql = DateFormat('yyyy-MM-dd HH:mm:ss').format(dt);
+
+                  try {
+                    // 3) Slot sicherstellen (erstellt oder findet slot_id)
+                    // Barber-ID (String) in int umwandeln
+                    final parsedBarberId = int.tryParse(user.userId);
+                    if (parsedBarberId == null || parsedBarberId <= 0) {
+                      Get.snackbar(
+                          'Fehler', 'Ungültige Barber-ID: ${user.userId}');
+                      return;
+                    }
+
+// Slot anlegen/holen – ACHTUNG: Semikolon am Ende!
+                    final ensure = await ApiService.ensureSlot(
+                      barberId: parsedBarberId,
+                      dateTimeIso: mysql,
+                      durationMin: 30,
                     );
-                    showDialog(
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (context) {
-                        final selectedDateStr =
-                            controller.tecDate.text; // e.g., '19/05/2025'
-                        final selectedTimeStr =
-                            findController.selectedTimes.first; // e.g., '11:00'
 
-                        final combined =
-                            '$selectedDateStr $selectedTimeStr'; // '19/05/2025 11:00'
+                    if (ensure['status'] != 'success') {
+                      Get.snackbar(
+                          'Fehler',
+                          ensure['message']?.toString() ??
+                              'Slot nicht verfügbar');
+                      return;
+                    }
 
-                        // Parse the combined string to DateTime
-                        final selectedDateTime = DateFormat(
-                          'dd/MM/yyyy HH:mm',
-                        ).parse(combined);
+                    final slotId = int.parse(ensure['slot_id'].toString());
 
-                        // Format to desired output, e.g., 'May 19, 2025 at 11:00 AM'
-                        final formattedDateTime = DateFormat(
-                          'MMMM d, yyyy \'at\' HH:mm',
-                        ).format(selectedDateTime);
-                        return Dialog(
+                    // 4) Reservation anlegen
+                    // Todo: die aktuelle eingeloggte userId aus deinem Auth-State holen
+
+                    final auth = Get.find<AuthController>();
+
+                    final int currentUserId = auth.currentUserId.value is int
+                        ? auth.currentUserId.value!
+                        : int.parse(auth.currentUserId.value.toString());
+
+                    final res = await ApiService.createReservation(
+                      userId: currentUserId,
+                      slotId: slotId,
+                      paymentMethod: controller.selectedPaymentMethod.value
+                          .toLowerCase(), // 'cash' | 'card'
+                    );
+
+                    if (res['status'] == 'success') {
+                      // (optional) lokal in deinem bestehenden Mock-Store weiterführen
+                      final booking = BookingRequest(
+                        requestId: res['reservation_id'].toString(),
+                        barberName: user.name,
+                        selectedTimes: findController.selectedTimes,
+                        services: selectedServices,
+                        barberRating: user.rating,
+                        price: totalPrice,
+                        date: controller.tecDate.text,
+                      );
+                      await bookingController.saveBooking(booking);
+
+                      // UI-Feedback/Bestätigung
+                      final formatted =
+                          DateFormat("MMMM d, yyyy 'at' HH:mm").format(dt);
+                      Get.snackbar(
+                          'OK', 'Termin angefragt ${res['reservation_id']}');
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (_) => Dialog(
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Container(
-                            width: 300.w,
-
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color:
-                                  Get.isDarkMode
-                                      ? AppColors.darkScreenBg
-                                      : AppColors.whiteColor,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: InkWell(
-                                    onTap: () {
-                                      // Get.close(3);
-                                      Get.back();
-                                      // Get.back();
-
-                                    },
-                                    child: Icon(
-                                      Icons.close,
-                                      color:
-                                          Get.isDarkMode
-                                              ? AppColors.whiteColor
-                                              : AppColors.blackColor,
-                                    ),
-                                  ),
-                                ),
-
-                                Icon(
-                                  Icons.check_circle_rounded,
-                                  color: AppColors.primaryColor,
-                                ),
-
+                                const Icon(Icons.check_circle_rounded,
+                                    color: AppColors.primaryColor, size: 36),
+                                12.ph,
+                                Text("Registration Completed!",
+                                    style: AppTextStyles.getPoppins(
+                                        16.sp, 6.weight)),
+                                8.ph,
                                 Text(
-                                  "Registration Completed!",
-                                  style: AppTextStyles.getPoppins(
-                                    14.sp,
-                                    6.weight,
-                                  ),
-                                ),
-                                20.ph,
-                                Text(
-                                  'Leonardo, You have an appointment scheduled with ${booking.barberName} on $formattedDateTime for a hair cutting service.',
+                                  'You have an appointment with ${booking.barberName} on $formatted.',
                                   textAlign: TextAlign.center,
-                                  style: AppTextStyles.getPoppins(
-                                    12.sp,
-                                    4.weight,
-                                  ),
+                                  style:
+                                      AppTextStyles.getPoppins(12.sp, 4.weight),
                                 ),
-                                10.ph,
-                                Text(
-                                  'Thank you for your choice! We will send you a reminder 1 hour before the appointment.'
-                                      .tr,
-                                  textAlign: TextAlign.center,
-                                  style: AppTextStyles.getPoppins(
-                                    12.sp,
-                                    4.weight,
-                                  ),
-                                ),
-                                10.ph,
+                                12.ph,
+                                CustomButtonWidget(
+                                    btnLabel: 'OK', onTap: () => Get.back()),
                               ],
                             ),
                           ),
-                        );
-                      },
-                    );
-                  });
+                        ),
+                      );
+                    } else {
+                      Get.snackbar('Fehler',
+                          res['message']?.toString() ?? 'Unbekannter Fehler');
+                    }
+
+                    if (controller.selectedPaymentMethod.value == 'Card') {
+                      Get.snackbar(
+                          'Payment', 'Your payment has been processed.');
+                    }
+                  } catch (e) {
+                    Get.snackbar('Exception', e.toString());
+                  }
                 },
               ),
             ),
@@ -336,13 +340,11 @@ class RegistrationTab extends StatelessWidget {
           alignment: Alignment.center,
           padding: EdgeInsets.symmetric(vertical: 4),
           decoration: BoxDecoration(
-            color:
-                controller.selectedTimes.contains(time)
-                    ? AppColors.primaryColor
-                    : Get.isDarkMode
+            color: controller.selectedTimes.contains(time)
+                ? AppColors.primaryColor
+                : Get.isDarkMode
                     ? AppColors.darkScreenBg
                     : AppColors.whiteColor,
-
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
@@ -357,7 +359,6 @@ class RegistrationTab extends StatelessWidget {
               14.sp,
               5.weight,
               themeController.isDarkMode,
-
               AppColors.textBlackColor,
             ),
           ),
@@ -366,8 +367,6 @@ class RegistrationTab extends StatelessWidget {
     );
   }
 
-
-
   void _showCardPaymentSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -375,7 +374,8 @@ class RegistrationTab extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),
-      backgroundColor: Get.isDarkMode ? AppColors.darkScreenBg : AppColors.whiteColor,
+      backgroundColor:
+          Get.isDarkMode ? AppColors.darkScreenBg : AppColors.whiteColor,
       builder: (context) {
         final TextEditingController cardNumber = TextEditingController();
         final TextEditingController expiry = TextEditingController();
@@ -433,7 +433,6 @@ class RegistrationTab extends StatelessWidget {
                 onTap: () {
                   // Call payment processing here
                   Get.back();
-
                 },
               ),
               20.ph,
@@ -443,5 +442,15 @@ class RegistrationTab extends StatelessWidget {
       },
     );
   }
+}
 
+TimeOfDay _parseTime(String hhmm) {
+  final p = hhmm.split(':');
+  return TimeOfDay(hour: int.parse(p[0]), minute: int.parse(p[1]));
+}
+
+DateTime _combineDateTime(String ddMMyyyy, String hhmm) {
+  // dd/MM/yyyy + HH:mm -> DateTime
+  final dt = DateFormat('dd/MM/yyyy HH:mm').parse('$ddMMyyyy $hhmm');
+  return dt;
 }

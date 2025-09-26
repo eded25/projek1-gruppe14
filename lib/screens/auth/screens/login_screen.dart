@@ -1,6 +1,5 @@
 import 'package:barber_select/generated/assets.dart';
 import 'package:barber_select/screens/auth/controller/auth_controller.dart';
-import 'package:barber_select/screens/auth/screens/choose_profile.dart';
 import 'package:barber_select/screens/auth/screens/signup_screen.dart';
 import 'package:barber_select/utils/app_colors.dart';
 import 'package:barber_select/utils/app_text_styles.dart';
@@ -12,6 +11,10 @@ import 'package:barber_select/widgets/custom_textform_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:barber_select/services/api_service.dart';
+import 'package:barber_select/screens/barber/home/screens/barber_home_screen.dart';
+import 'package:barber_select/screens/client/screens/home/screens/client_home_screen.dart';
+import 'package:barber_select/screens/barber/home/controller/barber_home_controller.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -35,10 +38,9 @@ class LoginScreen extends StatelessWidget {
                 Image.asset(
                   Assets.appLogo,
                   width: 120.w,
-                  color:
-                      Get.isDarkMode
-                          ? AppColors.whiteColor
-                          : AppColors.blackColor,
+                  color: Get.isDarkMode
+                      ? AppColors.whiteColor
+                      : AppColors.blackColor,
                 ),
                 30.ph,
                 Obx(
@@ -53,7 +55,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 Obx(
                   () => Text(
-                    'Welcome Back 👋'.tr,
+                    'Willkommen zurück'.tr,
                     style: AppTextStyles.getPoppins(
                       14.sp,
                       4.weight,
@@ -70,11 +72,11 @@ class LoginScreen extends StatelessWidget {
                         fieldLabel: 'Email'.tr,
                         focusNode: controller.fnEmail,
                         controller: controller.tecEmail,
-                        hintText: 'demouser@gmail.com',
+                        hintText: 'THMcut@gmail.com',
                         darkBorderColor: AppColors.darkBorderColor,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'This field is required'.tr;
+                            return 'Dieses Feld ist erforderlich'.tr;
                           }
                           return Validators.validateEmail(value);
                         },
@@ -82,12 +84,11 @@ class LoginScreen extends StatelessWidget {
                       20.ph,
                       Obx(
                         () => CustomTextFormField(
-                          fieldLabel: 'Password'.tr,
+                          fieldLabel: 'Passwort'.tr,
                           focusNode: controller.fnPassword,
                           controller: controller.tecPassword,
                           obscureText: controller.togglePasswordL.value,
                           darkBorderColor: AppColors.darkBorderColor,
-
                           hintText: '******',
                           suffix: InkWell(
                             onTap: () {
@@ -106,25 +107,100 @@ class LoginScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 20.ph,
                 CustomButtonWidget(
                   btnLabel: 'Login'.tr,
                   height: 50,
-                  onTap: () {
+                  onTap: () async {
                     if (controller.loginForm.currentState!.validate()) {
-                      Get.to(() => ChooseProfile());
+                      // Loading Indicator anzeigen
+                      Get.snackbar(
+                        "Login",
+                        " Anmeldung läuft...",
+                        backgroundColor: Colors.blue,
+                        colorText: Colors.white,
+                        duration: Duration(seconds: 2),
+                      );
+
+                      final result = await ApiService.loginUser(
+                        email: controller.tecEmail.text.trim(),
+                        password: controller.tecPassword.text,
+                      );
+
+                      if (result['status'] == 'success') {
+                        // User-Daten speichern
+                        await controller.setUser(
+                          id: result['user_id'],
+                          email: result['email'],
+                          role: result['role'],
+                          name: result['name'] ?? '',
+                        );
+
+                        // Benutzername für BarberHomeController speichern
+                        try {
+                          final barberController =
+                              Get.find<BarberHomeController>();
+                          await barberController
+                              .setUserName(result['name'] ?? 'Benutzer');
+                        } catch (e) {
+                          // Controller existiert noch nicht, wird beim ersten Laden gesetzt
+                        }
+
+                        Get.snackbar(
+                          "Erfolg",
+                          "Willkommen, ${result['name'] ?? 'Benutzer'}!",
+                          backgroundColor: Colors.green,
+                          colorText: Colors.white,
+                          duration: Duration(seconds: 2),
+                        );
+
+                        // AUTOMATISCHES ROUTING BASIEREND AUF ROLLE
+                        if (result['role'] == 'barber') {
+                          Get.offAll(() => BarberHomeScreen());
+                        } else {
+                          Get.offAll(() => ClientHomeScreen());
+                        }
+                      } else {
+                        // Login fehlgeschlagen
+                        Get.snackbar(
+                          "Login Fehler",
+                          "${result['message'] ?? 'Login fehlgeschlagen'}",
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                          duration: Duration(seconds: 3),
+                        );
+                      }
+                    } else {
+                      // Formvalidierung fehlgeschlagen
+                      Get.snackbar(
+                        "Eingabefehler",
+                        "⚠️ Bitte überprüfen Sie Ihre Eingaben",
+                        backgroundColor: Colors.orange,
+                        colorText: Colors.white,
+                        duration: Duration(seconds: 2),
+                      );
                     }
                   },
                 ),
                 40.ph,
-                Text(
-                  "Forgot Password?".tr,
-                  style: AppTextStyles.getPoppins(
-                    16.sp,
-                    6.weight,
-                    themeController.isDarkMode,
-                    AppColors.primaryColor,
+                InkWell(
+                  onTap: () {
+                    // TODO: Passwort vergessen Funktionalität implementieren
+                    Get.snackbar(
+                      "Info",
+                      "Passwort zurücksetzen wird bald verfügbar sein",
+                      backgroundColor: Colors.blue,
+                      colorText: Colors.white,
+                    );
+                  },
+                  child: Text(
+                    "Passwort vergessen?".tr,
+                    style: AppTextStyles.getPoppins(
+                      16.sp,
+                      6.weight,
+                      themeController.isDarkMode,
+                      AppColors.primaryColor,
+                    ),
                   ),
                 ),
                 30.ph,
@@ -132,18 +208,16 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Divider(
-                        color:
-                            Get.isDarkMode
-                                ? AppColors.whiteColor.withOpacity(0.6)
-                                : AppColors.blackColor.withOpacity(0.6),
+                        color: Get.isDarkMode
+                            ? AppColors.whiteColor.withOpacity(0.6)
+                            : AppColors.blackColor.withOpacity(0.6),
                         thickness: 0.8,
                       ),
                     ),
                     20.pw,
-
                     Obx(
                       () => Text(
-                        "OR".tr,
+                        "Oder".tr,
                         style: AppTextStyles.getPoppins(
                           14.sp,
                           4.weight,
@@ -152,13 +226,11 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     20.pw,
-
                     Flexible(
                       child: Divider(
-                        color:
-                            Get.isDarkMode
-                                ? AppColors.whiteColor.withOpacity(0.6)
-                                : AppColors.blackColor.withOpacity(0.6),
+                        color: Get.isDarkMode
+                            ? AppColors.whiteColor.withOpacity(0.6)
+                            : AppColors.blackColor.withOpacity(0.6),
                         thickness: 0.8,
                       ),
                     ),
@@ -170,7 +242,7 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     Obx(
                       () => Text(
-                        "Don't have an account?".tr,
+                        "Sie haben noch kein Konto?".tr,
                         style: AppTextStyles.getPoppins(
                           14.sp,
                           5.weight,
@@ -192,7 +264,7 @@ class LoginScreen extends StatelessWidget {
                       },
                       child: Obx(
                         () => Text(
-                          "SIGN UP",
+                          "ANMELDEN",
                           style: AppTextStyles.getPoppins(
                             14.sp,
                             6.weight,
@@ -207,6 +279,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                20.ph,
               ],
             ),
           ),

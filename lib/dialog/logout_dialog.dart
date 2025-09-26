@@ -30,7 +30,7 @@ class LogoutDialog extends StatelessWidget {
           children: [
             Obx(
               () => Text(
-                "Are you sure you want to sign out?".tr,
+                "Sicher?".tr,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.getPoppins(
                   18.sp,
@@ -46,7 +46,7 @@ class LogoutDialog extends StatelessWidget {
                 SizedBox(
                   width: 80.w,
                   child: CustomButtonWidget(
-                    btnLabel: 'Agree',
+                    btnLabel: 'Zustimmen',
                     bgColor: AppColors.primaryColor,
                     borderRadius: 12,
                     onTap: () {
@@ -61,7 +61,7 @@ class LogoutDialog extends StatelessWidget {
                   child: Obx(
                     () => CustomButtonWidget(
                       borderRadius: 12,
-                      btnLabel: 'Cancel',
+                      btnLabel: 'Abbruch',
                       bgColor: AppColors.blackColor.withOpacity(0.7),
                       onTap: () {
                         Get.back();

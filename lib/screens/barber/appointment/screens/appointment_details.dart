@@ -69,7 +69,7 @@ class AppointmentDetails extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          "Quick Reminder".tr,
+                          "Schnell-Erinnerung".tr,
                           style: AppTextStyles.getPoppins(
                             12.sp,
                             4.weight,
@@ -100,7 +100,7 @@ class AppointmentDetails extends StatelessWidget {
             AppointmentDate(appointment: appointmentModel!),
             20.ph,
             Text(
-             isClientSide?'BARBER'.tr: 'Client'.tr,
+             isClientSide?'BARBER'.tr: 'Kunde'.tr,
               style: AppTextStyles.getPoppins(
                 14.sp,
                 4.weight,
@@ -219,7 +219,7 @@ class AppointmentDetails extends StatelessWidget {
                                 children: [
                                   Obx(
                                     () => Text(
-                                      "Are you sure you want to cancel the booking?"
+                                      "Sind Sie sicher, dass Sie die Buchung stornieren möchten?"
                                           .tr,
                                       textAlign: TextAlign.center,
                                       style: AppTextStyles.getPoppins(
@@ -236,7 +236,7 @@ class AppointmentDetails extends StatelessWidget {
                                       SizedBox(
                                         width: 80.w,
                                         child: CustomButtonWidget(
-                                          btnLabel: 'Yes',
+                                          btnLabel: 'JA',
                                           bgColor: AppColors.primaryColor,
                                           borderRadius: 12,
                                           onTap: () {
@@ -255,7 +255,7 @@ class AppointmentDetails extends StatelessWidget {
                                         child: Obx(
                                           () => CustomButtonWidget(
                                             borderRadius: 12,
-                                            btnLabel: 'Back',
+                                            btnLabel: 'Zurück',
                                             bgColor: AppColors.blackColor.withOpacity(
                                               0.7,
                                             ),
@@ -311,7 +311,7 @@ class AppointmentPriceDetails extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'SERV.:',
+              'Dienstleistung:',
               style: AppTextStyles.getPoppins(
                 16.sp,
                 4.weight,
@@ -331,7 +331,7 @@ class AppointmentPriceDetails extends StatelessWidget {
                 ),
                 10.pw,
                 Text(
-                  'Cred Card',
+                  'Kreditkarte',
                   style: AppTextStyles.getPoppins(
                     16.sp,
                     4.weight,
@@ -366,7 +366,7 @@ class AppointmentPriceDetails extends StatelessWidget {
                     children: [
                       10.ph,
                       Text(
-                        "Edit Total".tr,
+                        "Summe bearbeiten".tr,
                         style: AppTextStyles.getPoppins(
                           24.sp,
                           5.weight,
@@ -375,7 +375,7 @@ class AppointmentPriceDetails extends StatelessWidget {
                       ),
                       2.ph,
                       Text(
-                        "Adjust the amount/payment if needed".tr,
+                        "Passen Sie den Betrag/die Zahlung bei Bedarf an".tr,
                         style: AppTextStyles.getPoppins(
                           16.sp,
                           4.weight,
@@ -406,13 +406,13 @@ class AppointmentPriceDetails extends StatelessWidget {
                               fieldLabel: '',
                               items:
                                   [
-                                    'Credit Card',
-                                    'Debit Card',
-                                    'Cash',
-                                    'Unpaid',
+                                    'Kreditkarte',
+                                    'Debitkarte',
+                                    'Bargeld',
+                                    'Ungezahlt',
                                   ].obs,
                               selectedItem: controller.selectedPaymentMethod,
-                              hintText: 'Payment',
+                              hintText: 'ZaHlungsmethode'.tr,
                               onChangedDropdown: (value) {
                                 controller.updateSelectedPaymentMethod(value);
                               },
@@ -431,7 +431,7 @@ class AppointmentPriceDetails extends StatelessWidget {
                             Flexible(
                               child: SizedBox(
                                 child: CustomButtonWidget(
-                                  btnLabel: 'Back',
+                                  btnLabel: 'Zurück'.tr,
                                   borderRadius: 6,
                                   height: 45.h,
 
@@ -529,7 +529,7 @@ class ServicesTile extends StatelessWidget {
                         children: [
                           10.ph,
                           Text(
-                            "Edit Service".tr,
+                            "Dienstleistung bearbeiten".tr,
                             style: AppTextStyles.getPoppins(
                               24.sp,
                               5.weight,
@@ -538,7 +538,7 @@ class ServicesTile extends StatelessWidget {
                           ),
                           2.ph,
                           Text(
-                            "Adjust the service if needed".tr,
+                            "Anpassung der Dienstleistung, falls erforderlich".tr,
                             style: AppTextStyles.getPoppins(
                               16.sp,
                               4.weight,
@@ -618,7 +618,7 @@ class ServicesTile extends StatelessWidget {
                                             ],
                                           ),
                                           Text(
-                                            'Haircut with beard',
+                                            'Haarschnitt mit Bart',
                                             style: AppTextStyles.getPoppins(
                                               13.sp,
                                               4.weight,
@@ -668,7 +668,7 @@ class ServicesTile extends StatelessWidget {
                               ),
                               Spacer(),
                               Text(
-                                'Swipe to see more'.tr,
+                                'Wischen Sie, um mehr zu sehen'.tr,
                                 style: AppTextStyles.getPoppins(
                                   12.sp,
                                   4.weight,
@@ -686,7 +686,7 @@ class ServicesTile extends StatelessWidget {
                                 Flexible(
                                   child: SizedBox(
                                     child: CustomButtonWidget(
-                                      btnLabel: 'Back',
+                                      btnLabel: 'Zurück'.tr,
                                       borderRadius: 6,
                                       height: 45.h,
 
@@ -718,7 +718,7 @@ class ServicesTile extends StatelessWidget {
                 );
               },
               child: Text(
-                'EDIT'.tr,
+                'Bearbeiten'.tr,
                 style: AppTextStyles.getPoppins(
                   14.sp,
                   6.weight,
@@ -824,7 +824,7 @@ class ServicesTile extends StatelessWidget {
             ),
             Spacer(),
             Text(
-              'Swipe to see more'.tr,
+              'Wischen Sie, um mehr zu sehen'.tr,
               style: AppTextStyles.getPoppins(
                 12.sp,
                 4.weight,
@@ -922,7 +922,7 @@ class ProductTile extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(
-                                'Shaving Cream',
+                                'Rasierschaum',
                                 style: AppTextStyles.getPoppins(
                                   14.sp,
                                   4.weight,
@@ -954,7 +954,7 @@ class ProductTile extends StatelessWidget {
             ),
             Spacer(),
             Text(
-              'Swipe to see more'.tr,
+              'Wischen Sie, um mehr zu sehen'.tr,
               style: AppTextStyles.getPoppins(
                 12.sp,
                 4.weight,
@@ -1023,7 +1023,7 @@ class CustomerDetails extends StatelessWidget {
                     children: [
                       10.ph,
                       Text(
-                        "Edit Client".tr,
+                        "Kunde bearbeiten".tr,
                         style: AppTextStyles.getPoppins(
                           24.sp,
                           5.weight,
@@ -1033,7 +1033,7 @@ class CustomerDetails extends StatelessWidget {
                       ),
                       2.ph,
                       Text(
-                        "Edit the name or phone number if necessary".tr,
+                        "Bearbeiten Sie den Namen oder die Telefonnummer, falls erforderlich.".tr,
                         textAlign: TextAlign.center,
                         style: AppTextStyles.getPoppins(
                           16.sp,
@@ -1080,7 +1080,7 @@ class CustomerDetails extends StatelessWidget {
                             Flexible(
                               child: SizedBox(
                                 child: CustomButtonWidget(
-                                  btnLabel: 'Back'.tr,
+                                  btnLabel: 'Zurück'.tr,
                                   borderRadius: 6,
                                   height: 45.h,
 
@@ -1199,7 +1199,7 @@ class AppointmentDate extends StatelessWidget {
                     children: [
                       10.ph,
                       Text(
-                        "Edit Date".tr,
+                        "Datum bearbeiten".tr,
                         style: AppTextStyles.getPoppins(
                           24.sp,
                           5.weight,
@@ -1208,7 +1208,7 @@ class AppointmentDate extends StatelessWidget {
                       ),
                       2.ph,
                       Text(
-                        "Edit the date if necessary.".tr,
+                        "Bearbeiten Sie das Datum, falls erforderlich.".tr,
                         style: AppTextStyles.getPoppins(
                           16.sp,
                           4.weight,
@@ -1242,7 +1242,7 @@ class AppointmentDate extends StatelessWidget {
                               '11:30',
                               '12:00',
                             ].obs,
-                        hintText: 'Hour',
+                        hintText: 'Stunden',
                         selectedItem: controller.selectedAppointmentTime,
                         onChangedDropdown: (value) {
                           controller.updateSelectedAppointmentTime(value);
@@ -1251,7 +1251,7 @@ class AppointmentDate extends StatelessWidget {
                       ),
                       10.ph,
                       CustomButtonWidget(
-                        btnLabel: 'Free'.tr,
+                        btnLabel: 'Frei'.tr,
                         borderRadius: 6,
                         height: 45.h,
                         onTap: () {
@@ -1277,7 +1277,7 @@ class AppointmentDate extends StatelessWidget {
                                   children: [
                                     10.ph,
                                     Text(
-                                      "Free Mode".tr,
+                                      "Frei Mode".tr,
                                       style: AppTextStyles.getPoppins(
                                         24.sp,
                                         5.weight,
@@ -1286,7 +1286,7 @@ class AppointmentDate extends StatelessWidget {
                                     ),
                                     2.ph,
                                     Text(
-                                      "Appointment with available time".tr,
+                                      "Termin mit verfügbarer Zeit".tr,
                                       style: AppTextStyles.getPoppins(
                                         16.sp,
                                         4.weight,
@@ -1305,7 +1305,7 @@ class AppointmentDate extends StatelessWidget {
                                             '11:30',
                                             '12:00',
                                           ].obs,
-                                      hintText: 'Hour',
+                                      hintText: 'Stunden',
                                       selectedItem:
                                           controller.selectedAppointmentTime,
                                       onChangedDropdown: (value) {
@@ -1318,7 +1318,7 @@ class AppointmentDate extends StatelessWidget {
                                     ),
                                     10.ph,
                                     Text(
-                                      'Service from:'.tr,
+                                      'Dienstleistung von:'.tr,
                                       style: AppTextStyles.getPoppins(
                                         12.sp,
                                         4.weight,
@@ -1344,7 +1344,7 @@ class AppointmentDate extends StatelessWidget {
                                     }),
                                     10.ph,
                                     Text(
-                                      'Move the slider to select the start and end of the service'
+                                      'Bewegen Sie den Schieberegler, um den Beginn und das Ende des Dienstes auszuwählen'
                                           .tr,
                                       style: AppTextStyles.getPoppins(
                                         12.sp,
@@ -1392,7 +1392,7 @@ class AppointmentDate extends StatelessWidget {
                                           Flexible(
                                             child: SizedBox(
                                               child: CustomButtonWidget(
-                                                btnLabel: 'Back'.tr,
+                                                btnLabel: 'Zurück'.tr,
                                                 borderRadius: 6,
                                                 height: 45.h,
 
@@ -1438,7 +1438,7 @@ class AppointmentDate extends StatelessWidget {
                             Flexible(
                               child: SizedBox(
                                 child: CustomButtonWidget(
-                                  btnLabel: 'Back'.tr,
+                                  btnLabel: 'Zurück'.tr,
                                   borderRadius: 6,
                                   height: 45.h,
 

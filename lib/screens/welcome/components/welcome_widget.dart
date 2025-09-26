@@ -62,7 +62,7 @@ class WelcomeWidget extends StatelessWidget {
                         40.ph,
 
                         Text(
-                          "Welcome to".tr,
+                          "Willkommen bei".tr,
                           style: AppTextStyles.getPoppins(22.sp, 6.weight),
                         ),
                         40.ph,
@@ -159,7 +159,7 @@ class WelcomeWidget extends StatelessWidget {
                               ? 150
                               : null,
                       child: CustomButtonWidget(
-                        btnLabel: 'SIGN UP',
+                        btnLabel: 'REGISTRIEREN',
                         bgColor: AppColors.whiteColor,
                         onTap: () {
                           Get.to(() => SignupScreen());
